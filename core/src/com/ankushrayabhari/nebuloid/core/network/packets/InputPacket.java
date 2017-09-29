@@ -1,4 +1,4 @@
-package com.ankushrayabhari.nebuloid.core.network;
+package com.ankushrayabhari.nebuloid.core.network.packets;
 
 import com.badlogic.gdx.math.Vector2;
 

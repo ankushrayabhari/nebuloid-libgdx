@@ -1,12 +1,10 @@
-package com.ankushrayabhari.nebuloid.core;
+package com.ankushrayabhari.nebuloid.client;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
-
-import static com.badlogic.gdx.scenes.scene2d.utils.FocusListener.FocusEvent.Type.scroll;
 
 /**
  * Created by ankushrayabhari on 8/6/17.

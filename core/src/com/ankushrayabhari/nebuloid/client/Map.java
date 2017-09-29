@@ -1,8 +1,10 @@
-package com.ankushrayabhari.nebuloid.core;
+package com.ankushrayabhari.nebuloid.client;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
@@ -11,9 +13,11 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class Map implements Disposable {
     private Texture texture;
+    private Camera camera;
 
-    public Map() {
+    public Map(Camera camera) {
         texture = new Texture(Gdx.files.internal("map.png"));
+        this.camera = camera;
     }
 
     public void render(SpriteBatch batch) {

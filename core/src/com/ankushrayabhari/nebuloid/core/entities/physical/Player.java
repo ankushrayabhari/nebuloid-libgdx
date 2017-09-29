@@ -1,11 +1,12 @@
 package com.ankushrayabhari.nebuloid.core.entities.physical;
 
 import com.ankushrayabhari.nebuloid.core.Constants;
-import com.ankushrayabhari.nebuloid.core.network.InputPacket;
+import com.ankushrayabhari.nebuloid.core.network.packets.InputPacket;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.esotericsoftware.kryonet.Client;
+
+import java.util.UUID;
 
 /**
  * Created by ankushrayabhari on 9/27/17.
@@ -19,8 +20,8 @@ public class Player extends PhysicalEntity {
     private Vector2 moveDir;
     private float angularVelocity;
 
-    public Player(World world) {
-        super(world, getConfig());
+    public Player(World world, UUID uuid) {
+        super(world, getConfig(), Constants.EntityCode.PLAYER.ordinal(), uuid);
         input = new InputPacket();
         moveDir = new Vector2(0,0);
         angularVelocity = 0;

@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.UUID;
+
 /**
  * Created by ankushrayabhari on 9/27/17.
  */
@@ -18,8 +20,8 @@ public abstract class PhysicalEntity extends Entity {
     private World world;
     private Vector2 dimensions;
 
-    protected PhysicalEntity(World world, PhysicalEntityConfig config) {
-        super(config.zIndex);
+    protected PhysicalEntity(World world, PhysicalEntityConfig config, int code, UUID uuid) {
+        super(config.zIndex, code, uuid);
         this.dimensions = config.dimensions;
 
         BodyDef bodyDef = new BodyDef();
@@ -32,7 +34,10 @@ public abstract class PhysicalEntity extends Entity {
         bodyDef.position.set(config.initialPosition);
         bodyDef.fixedRotation = true;
         bodyDef.angle = config.angle;
-        body = world.createBody(bodyDef);
+
+        synchronized (world) {
+            body = world.createBody(bodyDef);
+        }
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(config.dimensions.x/2, config.dimensions.y/2);
@@ -95,4 +100,9 @@ public abstract class PhysicalEntity extends Entity {
 
     public Body getBody() { return body; }
     public Vector2 getDimensions() { return dimensions; }
+
+    @Override
+    public Vector2 getPosition() {
+        return body.getPosition();
+    }
 }

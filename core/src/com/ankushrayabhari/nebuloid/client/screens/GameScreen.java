@@ -1,5 +1,6 @@
 package com.ankushrayabhari.nebuloid.client.screens;
 
+import com.ankushrayabhari.nebuloid.client.ClientGameEngine;
 import com.ankushrayabhari.nebuloid.client.Window;
 import com.ankushrayabhari.nebuloid.core.GameEngine;
 import com.badlogic.gdx.Screen;
@@ -10,18 +11,21 @@ import com.badlogic.gdx.Screen;
 
 public class GameScreen implements Screen {
     private Window window;
+    private ClientGameEngine gameEngine;
 
     public GameScreen(Window window) {
+        gameEngine = new ClientGameEngine();
         this.window = window;
     }
 
     @Override
     public void show() {
+        gameEngine.init();
     }
 
     @Override
     public void render(float delta) {
-
+        gameEngine.render(delta);
     }
 
     @Override
