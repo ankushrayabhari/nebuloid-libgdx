@@ -29,7 +29,7 @@ public class ClientNetworkManager extends NetworkManager {
         Log.set(Log.LEVEL_NONE);
         client = new Client();
         client.start();
-        ClientNetworkManager.registerClasses(client.getKryo());
+        NetworkManager.setup(client.getKryo());
     }
 
     public void connect() {
@@ -47,7 +47,7 @@ public class ClientNetworkManager extends NetworkManager {
     public void requestSpawnEntity(Constants.EntityCode code) {
         NewEntityPacket newPlayerPacket = new NewEntityPacket();
         newPlayerPacket.entityCode = code.ordinal();
-        newPlayerPacket.uuid = "";
+        newPlayerPacket.uuid = null;
         client.sendTCP(newPlayerPacket);
     }
 

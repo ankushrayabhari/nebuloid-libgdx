@@ -14,7 +14,7 @@ import com.ankushrayabhari.nebuloid.core.network.packets.NewEntityPacket;
 import com.ankushrayabhari.nebuloid.core.network.packets.PhysicalEntityStatePacket;
 import com.ankushrayabhari.nebuloid.core.network.packets.SelectPlayerPacket;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
@@ -31,16 +32,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import static sun.audio.AudioPlayer.player;
-
 /**
  * Created by ankushrayabhari on 8/6/17.
  */
 
-public class ClientGameEngine {
+public class ClientGameEngine implements Disposable {
     private SpriteBatch batch;
     private World world;
-    private Map map;
+    private ClientMap map;
     private OrthographicCamera camera;
     private KeyboardController inputController;
     private HashMap<UUID, Entity> idToEntityMap;
@@ -67,7 +66,7 @@ public class ClientGameEngine {
         );
 
         batch = new SpriteBatch();
-        map = new Map(camera);
+        map = new ClientMap(world, camera);
 
         inputController = new KeyboardController();
         Gdx.input.setInputProcessor(inputController);
@@ -98,14 +97,29 @@ public class ClientGameEngine {
         Collections.sort(entityList, comparator);
         updateEntities(delta);
 
-        camera.position.set(player.getPosition(), 0);
-        camera.update();
+        updateCamera(camera, player.getPosition());
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         map.render(batch);
         drawEntities(batch);
         batch.end();
+    }
+
+    private void updateCamera(Camera camera, Vector2 playerPosition) {
+        Vector2 position = playerPosition.cpy();
+
+        float halfWidth = Gdx.graphics.getWidth() / 4;
+        float halfHeight = Gdx.graphics.getHeight() / 4;
+
+        if(position.x < halfWidth) position.x = halfWidth;
+        else if(position.x > map.getWidth() - halfWidth) position.x = map.getWidth() - halfWidth;
+
+        if(position.y < halfHeight) position.y = halfHeight;
+        else if(position.y > map.getHeight() - halfHeight) position.y = map.getHeight() - halfHeight;
+
+        camera.position.set(position, 0);
+        camera.update();
     }
 
     private void updateEntities(float delta) {
@@ -123,6 +137,13 @@ public class ClientGameEngine {
         while(iterator.hasNext()) {
             Entity entity = iterator.next();
 
+            if(entity.isDead()) {
+                entity.onDeath();
+                iterator.remove();
+            } else {
+                entity.update(delta);
+            }
+
             PhysicalEntityStatePacket state = lastReceivedState.get(entity.getUuid());
             if(state != null) {
                 Body body = ((PhysicalEntity) entity).getBody();
@@ -130,8 +151,6 @@ public class ClientGameEngine {
 
                 float xDelta = Math.abs(position.x - (state.x + state.vX * Constants.TIME_STEP));
                 float yDelta = Math.abs(position.y - (state.y + state.vY * Constants.TIME_STEP));
-
-                System.out.println(xDelta + " " + yDelta);
 
                 boolean xInSync = xDelta < 0.01;
                 boolean yInSync = yDelta < 0.01;
@@ -157,13 +176,6 @@ public class ClientGameEngine {
                 body.setTransform(newPos, angle);
                 body.setLinearVelocity(newVelocity);
                 body.setAngularVelocity(angularVelocity);
-            }
-
-            if(entity.isDead()) {
-                entity.onDeath();
-                iterator.remove();
-            } else {
-                entity.update(delta);
             }
         }
     }
@@ -202,12 +214,12 @@ public class ClientGameEngine {
     }
 
     private void updatePhysicalEntityState(PhysicalEntityStatePacket entityStatePacket) {
-        lastReceivedState.put(UUID.fromString(entityStatePacket.uuid), entityStatePacket);
+        lastReceivedState.put(entityStatePacket.uuid, entityStatePacket);
     }
 
     private void handleReceived (Connection connection, final Object object) {
         if(object instanceof SelectPlayerPacket) {
-            setPlayerId(UUID.fromString(((SelectPlayerPacket) object).uuid));
+            setPlayerId(((SelectPlayerPacket) object).uuid);
         } else if(object instanceof NewEntityPacket) {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
@@ -216,9 +228,16 @@ public class ClientGameEngine {
                 }
             });
         } else if(object instanceof DeleteEntityPacket) {
-            deleteEntity(UUID.fromString(((DeleteEntityPacket) object).uuid));
+            deleteEntity(((DeleteEntityPacket) object).uuid);
         } else if(object instanceof PhysicalEntityStatePacket) {
             updatePhysicalEntityState((PhysicalEntityStatePacket) object);
         }
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        map.dispose();
+        world.dispose();
     }
 }

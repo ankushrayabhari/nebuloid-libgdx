@@ -69,7 +69,7 @@ public class Player extends PhysicalEntity {
 
     private static PhysicalEntityConfig getConfig() {
         PhysicalEntityConfig config = new PhysicalEntityConfig();
-        config.initialPosition = new Vector2(175, 1875);
+        config.initialPosition = new Vector2(90,933);
         config.angle = 90 * MathUtils.degreesToRadians;
         config.dimensions = new Vector2(15,15);
         config.massive = false;

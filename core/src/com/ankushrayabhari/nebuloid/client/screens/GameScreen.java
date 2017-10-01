@@ -2,7 +2,6 @@ package com.ankushrayabhari.nebuloid.client.screens;
 
 import com.ankushrayabhari.nebuloid.client.ClientGameEngine;
 import com.ankushrayabhari.nebuloid.client.Window;
-import com.ankushrayabhari.nebuloid.core.GameEngine;
 import com.badlogic.gdx.Screen;
 
 /**

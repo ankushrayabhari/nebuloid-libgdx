@@ -22,6 +22,7 @@ public abstract class PhysicalEntity extends Entity {
 
     protected PhysicalEntity(World world, PhysicalEntityConfig config, int code, UUID uuid) {
         super(config.zIndex, code, uuid);
+        this.world = world;
         this.dimensions = config.dimensions;
 
         BodyDef bodyDef = new BodyDef();

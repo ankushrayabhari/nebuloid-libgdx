@@ -15,15 +15,17 @@ import java.util.UUID;
 public class ServerEntityFactory {
     private static ServerEntityFactory instance = new ServerEntityFactory();
 
-    public static Entity spawn(NewEntityPacket packet, World world, int connectionId) {
-        return instance.spawnEntity(packet, world, connectionId);
+    public static ServerEntityFactory getInstance() {
+        return instance;
     }
 
-    private Entity spawnEntity(NewEntityPacket test, World world, int connectionId) {
+    public Entity spawnEntity(NewEntityPacket test, World world, int connectionId) {
         Constants.EntityCode code = Constants.EntityCode.values()[test.entityCode];
         Entity newEntity = null;
-        switch(code) {
-            case PLAYER: newEntity = new ServerPlayer(world, connectionId, UUID.randomUUID()); break;
+        switch (code) {
+            case PLAYER:
+                newEntity = new ServerPlayer(world, connectionId, UUID.randomUUID());
+                break;
         }
 
         return newEntity;

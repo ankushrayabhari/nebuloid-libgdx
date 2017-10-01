@@ -39,7 +39,6 @@ public class ServerNetworkManager extends NetworkManager {
         Log.set(Log.LEVEL_NONE);
         server = new Server();
         server.start();
-        ServerNetworkManager.registerClasses(server.getKryo());
     }
 
     public void connect() {
@@ -49,7 +48,7 @@ public class ServerNetworkManager extends NetworkManager {
             error.printStackTrace();
         }
 
-        NetworkManager.registerClasses(server.getKryo());
+        NetworkManager.setup(server.getKryo());
     }
 
     public void addListener(Listener listener) {
@@ -59,7 +58,7 @@ public class ServerNetworkManager extends NetworkManager {
     public void broadcastPhysicalEntityState(PhysicalEntity entity) {
         PhysicalEntityStatePacket packet = new PhysicalEntityStatePacket();
         PhysicalEntity physicalEntity = (PhysicalEntity) entity;
-        packet.uuid = physicalEntity.getUuid().toString();
+        packet.uuid = physicalEntity.getUuid();
         packet.x = physicalEntity.getPosition().x;
         packet.y = physicalEntity.getPosition().y;
         packet.vX = physicalEntity.getBody().getLinearVelocity().x;
@@ -72,20 +71,20 @@ public class ServerNetworkManager extends NetworkManager {
     public void broadcastNewEntity(Entity entity) {
         NewEntityPacket packet = new NewEntityPacket();
         packet.entityCode = entity.getEntityCode();
-        packet.uuid = entity.getUuid().toString();
+        packet.uuid = entity.getUuid();
 
         server.sendToAllTCP(packet);
     }
 
     public void broadcastDeadEntity(UUID uuid) {
         DeleteEntityPacket packet = new DeleteEntityPacket();
-        packet.uuid = uuid.toString();
+        packet.uuid = uuid;
         server.sendToAllTCP(packet);
     }
 
     public void selectPlayerInstance(UUID uuid, int connectionId) {
         SelectPlayerPacket packet = new SelectPlayerPacket();
-        packet.uuid = uuid.toString();
+        packet.uuid = uuid;
 
         server.sendToTCP(connectionId, packet);
     }
@@ -93,7 +92,7 @@ public class ServerNetworkManager extends NetworkManager {
     public void broadcastNewEntityToClient(int connectionId, Entity entity) {
         NewEntityPacket packet = new NewEntityPacket();
         packet.entityCode = entity.getEntityCode();
-        packet.uuid = entity.getUuid().toString();
+        packet.uuid = entity.getUuid();
 
         server.sendToTCP(connectionId, packet);
     }

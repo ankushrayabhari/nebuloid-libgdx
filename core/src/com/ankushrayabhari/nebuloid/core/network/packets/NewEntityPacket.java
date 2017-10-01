@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public class NewEntityPacket {
     public int entityCode;
-    public String uuid;
+    public UUID uuid;
 }

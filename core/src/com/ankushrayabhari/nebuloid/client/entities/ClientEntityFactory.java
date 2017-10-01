@@ -22,7 +22,7 @@ public class ClientEntityFactory {
     private Entity spawnEntity(NewEntityPacket test, World world) {
         EntityCode code = EntityCode.values()[test.entityCode];
         Entity newEntity = null;
-        UUID id = UUID.fromString(test.uuid);
+        UUID id = test.uuid;
 
         switch(code) {
             case PLAYER: newEntity = new ClientPlayer(world, id); break;
