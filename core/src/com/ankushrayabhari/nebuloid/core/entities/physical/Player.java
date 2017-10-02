@@ -21,7 +21,7 @@ public class Player extends PhysicalEntity {
     private float angularVelocity;
 
     public Player(World world, UUID uuid) {
-        super(world, getConfig(), Constants.EntityCode.PLAYER.ordinal(), uuid);
+        super(world, getConfig(), Constants.EntityCode.PLAYER, uuid);
         input = new InputPacket();
         moveDir = new Vector2(0,0);
         angularVelocity = 0;

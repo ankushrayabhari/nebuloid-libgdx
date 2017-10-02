@@ -11,6 +11,7 @@ import com.ankushrayabhari.nebuloid.core.network.packets.InputPacket;
 import com.ankushrayabhari.nebuloid.core.network.packets.NewEntityPacket;
 import com.ankushrayabhari.nebuloid.core.network.packets.PhysicalEntityStatePacket;
 import com.ankushrayabhari.nebuloid.core.network.packets.SelectPlayerPacket;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.esotericsoftware.kryonet.Client;
@@ -49,6 +50,7 @@ public class ServerNetworkManager extends NetworkManager {
         }
 
         NetworkManager.setup(server.getKryo());
+        Gdx.app.log("Server Network Manager", "Listening on ports " + Constants.TCP_PORT + "/" +  Constants.UDP_PORT);
     }
 
     public void addListener(Listener listener) {
@@ -70,7 +72,7 @@ public class ServerNetworkManager extends NetworkManager {
 
     public void broadcastNewEntity(Entity entity) {
         NewEntityPacket packet = new NewEntityPacket();
-        packet.entityCode = entity.getEntityCode();
+        packet.entityCode = entity.getEntityCode().ordinal();
         packet.uuid = entity.getUuid();
 
         server.sendToAllTCP(packet);
@@ -91,7 +93,7 @@ public class ServerNetworkManager extends NetworkManager {
 
     public void broadcastNewEntityToClient(int connectionId, Entity entity) {
         NewEntityPacket packet = new NewEntityPacket();
-        packet.entityCode = entity.getEntityCode();
+        packet.entityCode = entity.getEntityCode().ordinal();
         packet.uuid = entity.getUuid();
 
         server.sendToTCP(connectionId, packet);

@@ -1,5 +1,6 @@
 package com.ankushrayabhari.nebuloid.core.entities;
 
+import com.ankushrayabhari.nebuloid.core.Constants;
 import com.badlogic.gdx.math.Vector2;
 import java.util.UUID;
 
@@ -11,10 +12,10 @@ public abstract class Entity {
     private int zIndex;
     private boolean dead;
     private Vector2 position;
-    private int entityCode;
+    private Constants.EntityCode entityCode;
     private UUID uuid;
 
-    protected Entity(int zIndex, int entityCode, UUID uuid) {
+    protected Entity(int zIndex, Constants.EntityCode entityCode, UUID uuid) {
         this.zIndex = zIndex;
         this.dead = false;
         this.position = new Vector2();
@@ -41,7 +42,7 @@ public abstract class Entity {
 
     public Vector2 getPosition() { return position; }
 
-    public int getEntityCode() {
+    public Constants.EntityCode getEntityCode() {
         return entityCode;
     }
 

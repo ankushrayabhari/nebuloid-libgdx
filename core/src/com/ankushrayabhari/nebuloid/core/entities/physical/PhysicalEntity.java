@@ -20,7 +20,7 @@ public abstract class PhysicalEntity extends Entity {
     private World world;
     private Vector2 dimensions;
 
-    protected PhysicalEntity(World world, PhysicalEntityConfig config, int code, UUID uuid) {
+    protected PhysicalEntity(World world, PhysicalEntityConfig config, Constants.EntityCode code, UUID uuid) {
         super(config.zIndex, code, uuid);
         this.world = world;
         this.dimensions = config.dimensions;

@@ -1,5 +1,6 @@
 package com.ankushrayabhari.nebuloid.client.entities;
 
+import com.ankushrayabhari.nebuloid.core.Constants;
 import com.ankushrayabhari.nebuloid.core.entities.Entity;
 
 import java.util.UUID;
@@ -9,7 +10,7 @@ import java.util.UUID;
  */
 
 public abstract class DrawableEntity extends Entity implements Drawable {
-    protected DrawableEntity(int zIndex, int entityCode, UUID uuid) {
+    protected DrawableEntity(int zIndex, Constants.EntityCode entityCode, UUID uuid) {
         super(zIndex, entityCode, uuid);
     }
 }
