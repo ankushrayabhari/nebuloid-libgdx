@@ -1,4 +1,4 @@
-#Nebuloid
+# Nebuloid
 A multiplayer PVP shooter game written with libGDX (OpenGL) with Kryonet for networking
 
 ## Project Structure
